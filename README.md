@@ -1,4 +1,5 @@
-Bloc Base Project
+
+Bloc Time Project (built with Bloc Base Project starter template)
 =================
 
 A base for Bloc frontend projects.
