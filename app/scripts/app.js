@@ -9,20 +9,37 @@ blocTime.config(['$stateProvider', '$locationProvider', function($stateProvider,
   });
 }]);
 
-blocTime.controller('HomeController', ['$scope', '$interval', function($scope, $interval) {
+blocTime.controller('HomeController', ['$scope', '$interval', '$filter', function($scope, $interval, $filter) {
   $scope.title = "Welcome to Bloc Time!";
   $scope.time = 65;
   $scope.buttonLabel = "Start";
-  $scope.timeString = "" + $scope.time;
+  // $scope.timeString = "" + $scope.time;
   var countDown = function() {
     $scope.time -= 1;
     $scope.buttonLabel = "Reset";
     if ($scope.time == 0) {
       $interval.cancel(interval);
     }
-    // See Bloc Jams Filter
-    $scope.timeString = parseInt($scope.time/60, 10) + ":" + ($scope.time % 60);
+    $scope.timeString = $filter('remainingTime')($scope.time);
   }
 
   var interval = $interval(countDown, 1000);
 }]);
+
+blocTime.filter('remainingTime', function() {
+  return function(seconds) {
+    seconds = Number.parseFloat(seconds);
+    if (Number.isNaN(seconds)) {
+      return '-:--';
+    }
+    var wholeSeconds = Math.floor(seconds);
+    var minutes = Math.floor(wholeSeconds / 60);
+    remainingSeconds = wholeSeconds % 60;
+    var output = minutes + ':';
+    if (remainingSeconds < 10) {
+      output += '0';
+    }
+    output += remainingSeconds;
+    return output;
+  }
+})
