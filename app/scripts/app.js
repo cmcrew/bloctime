@@ -10,20 +10,37 @@ blocTime.config(['$stateProvider', '$locationProvider', function($stateProvider,
 }]);
 
 blocTime.controller('HomeController', ['$scope', '$interval', '$filter', function($scope, $interval, $filter) {
+  var promise;
   $scope.title = "Welcome to Bloc Time!";
-  $scope.time = 65;
+  $scope.time = 15;
+  $scope.timeString = $filter('remainingTime')($scope.time);
   $scope.buttonLabel = "Start";
-  // $scope.timeString = "" + $scope.time;
+  $scope.start = function() {
+    $scope.stop();
+    promise = $interval(countDown, 1000);
+  }
+  $scope.stop = function() {
+    $interval.cancel(promise);
+  }
   var countDown = function() {
     $scope.time -= 1;
     $scope.buttonLabel = "Reset";
     if ($scope.time == 0) {
-      $interval.cancel(interval);
+      $scope.stop();
     }
     $scope.timeString = $filter('remainingTime')($scope.time);
   }
-
-  var interval = $interval(countDown, 1000);
+  $scope.updateTimer = function() { 
+    if ($scope.buttonLabel === "Reset") {
+      $scope.stop();
+      $scope.time = 15;
+      $scope.timeString = $filter('remainingTime')($scope.time);
+      $scope.buttonLabel = "Start";
+    } 
+    else {
+      $scope.start();
+    }
+  }
 }]);
 
 blocTime.filter('remainingTime', function() {
