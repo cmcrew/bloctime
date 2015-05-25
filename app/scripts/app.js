@@ -11,21 +11,24 @@ blocTime.config(['$stateProvider', '$locationProvider', function($stateProvider,
 
 blocTime.controller('HomeController', ['$scope', '$interval', '$filter', function($scope, $interval, $filter) {
   var promise;
-  var onBreak = false;
-  var workTime = 25;
-  var breakTime = 5;
+  completedWorkSessions = 0;
+  onBreak = false;
+  var workTime = 2;
+  $scope.buttonLabel = "Start";
 
-  $scope.title = "Welcome to Bloc Time!";
   $scope.setTimer = function() {
     if (onBreak) {
-      $scope.time = breakTime;
+      if(completedWorkSessions % 4 === 0) {
+        $scope.time = 3;
+      } else {
+        $scope.time = 1;
+      }
     } else {
       $scope.time = workTime;
     }
   }
+  
   $scope.setTimer();
-  $scope.timeString = $filter('remainingTime')($scope.time);
-  $scope.buttonLabel = "Start";
   
   $scope.start = function() {
     $scope.stop();
@@ -37,17 +40,18 @@ blocTime.controller('HomeController', ['$scope', '$interval', '$filter', functio
   var countDown = function() {
     $scope.time -= 1;
     $scope.buttonLabel = "Reset";
-    if ($scope.time == 0) {
+    if ($scope.time === 0) {
       $scope.stop();
+      if (!onBreak) {
+        completedWorkSessions++;     
+      }
       onBreak = !onBreak;
     }
-    $scope.timeString = $filter('remainingTime')($scope.time);
   }
   $scope.updateTimer = function() { 
     if ($scope.buttonLabel === "Reset") {
       $scope.stop();
       $scope.setTimer();
-      $scope.timeString = $filter('remainingTime')($scope.time);
       $scope.buttonLabel = "Start";
     } 
     else {
