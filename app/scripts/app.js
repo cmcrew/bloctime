@@ -37,7 +37,7 @@ blocTime.controller('HomeController', ['$scope', '$interval', '$filter', functio
   $scope.stop = function() {
     $interval.cancel(promise);
   }
-  var countDown = function() {
+  $scope.countDown = function() {
     $scope.time -= 1;
     $scope.buttonLabel = "Reset";
     if ($scope.time === 0) {
