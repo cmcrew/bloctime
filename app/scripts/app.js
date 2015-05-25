@@ -11,8 +11,19 @@ blocTime.config(['$stateProvider', '$locationProvider', function($stateProvider,
 
 blocTime.controller('HomeController', ['$scope', '$interval', '$filter', function($scope, $interval, $filter) {
   var promise;
+  var onBreak = false;
+  var workTime = 25;
+  var breakTime = 5;
+
   $scope.title = "Welcome to Bloc Time!";
-  $scope.time = 15;
+  $scope.setTimer = function() {
+    if (onBreak) {
+      $scope.time = breakTime;
+    } else {
+      $scope.time = workTime;
+    }
+  }
+  $scope.setTimer();
   $scope.timeString = $filter('remainingTime')($scope.time);
   $scope.buttonLabel = "Start";
   
@@ -28,13 +39,14 @@ blocTime.controller('HomeController', ['$scope', '$interval', '$filter', functio
     $scope.buttonLabel = "Reset";
     if ($scope.time == 0) {
       $scope.stop();
+      onBreak = !onBreak;
     }
     $scope.timeString = $filter('remainingTime')($scope.time);
   }
   $scope.updateTimer = function() { 
     if ($scope.buttonLabel === "Reset") {
       $scope.stop();
-      $scope.time = 15;
+      $scope.setTimer();
       $scope.timeString = $filter('remainingTime')($scope.time);
       $scope.buttonLabel = "Start";
     } 
