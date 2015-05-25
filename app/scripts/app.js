@@ -15,6 +15,7 @@ blocTime.controller('HomeController', ['$scope', '$interval', '$filter', functio
   $scope.time = 15;
   $scope.timeString = $filter('remainingTime')($scope.time);
   $scope.buttonLabel = "Start";
+  
   $scope.start = function() {
     $scope.stop();
     promise = $interval(countDown, 1000);
