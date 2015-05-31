@@ -10,54 +10,72 @@ blocTime.config(['$stateProvider', '$locationProvider', function($stateProvider,
 }]);
 
 blocTime.controller('HomeController', ['$scope', '$interval', '$filter', function($scope, $interval, $filter) {
-  var promise;
   completedWorkSessions = 0;
   onBreak = false;
-  var workTime = 2;
-  $scope.buttonLabel = "Start";
 
-  $scope.setTimer = function() {
-    if (onBreak) {
-      if(completedWorkSessions % 4 === 0) {
-        $scope.time = 3;
-      } else {
-        $scope.time = 1;
+  dingSound = new buzz.sound('http://www.tonycuffe.com/mp3/tail%20toddle.mp3', {
+    preload: true
+  });
+  // I can't seem to get a local file to play. used the above file just to test buzz library
+  // dingSound = new buzz.sound( "/media/ding.mp3", {
+  //   preload: true
+  // });
+}]);
+
+blocTime.directive('timer', ['$interval','$filter', function($interval, $filter){
+  return {
+    templateUrl: '/templates/directives/timer.html',
+    replace: true,
+    restrict: 'E',
+    scope: {},
+    link: function(scope, element, attributes) {
+      var $timer = element;
+      var promise;
+      scope.buttonLabel = "Start";
+      scope.setTimer = function() {
+        if (onBreak) {
+          if(completedWorkSessions % 4 === 0) {
+            scope.time = attributes.longBreakTime;
+          } else {
+            scope.time = attributes.breakTime;
+          }
+        } else {
+          scope.time = attributes.workTime;
+        }
       }
-    } else {
-      $scope.time = workTime;
-    }
-  }
-  
-  $scope.setTimer();
-  
-  $scope.start = function() {
-    $scope.stop();
-    promise = $interval(countDown, 1000);
-  }
-  $scope.stop = function() {
-    $interval.cancel(promise);
-  }
-  $scope.countDown = function() {
-    $scope.time -= 1;
-    $scope.buttonLabel = "Reset";
-    if ($scope.time === 0) {
-      $scope.stop();
-      if (!onBreak) {
-        completedWorkSessions++;     
+      scope.setTimer();
+      scope.start = function() {
+        scope.stop();
+        promise = $interval(scope.countDown, 1000);
       }
-      onBreak = !onBreak;
+      scope.stop = function() {
+        $interval.cancel(promise);
+      }
+      scope.countDown = function() {
+        scope.time -= 1;
+        scope.buttonLabel = "Reset";
+        if (scope.time === 0) {
+          dingSound.play();
+          scope.stop();
+          if (!onBreak) {
+            completedWorkSessions++;     
+          }
+          onBreak = !onBreak;
+        }
+      }
+      scope.updateTimer = function() { 
+        if (scope.buttonLabel === "Reset") {
+          dingSound.stop();
+          scope.stop();
+          scope.setTimer();
+          scope.buttonLabel = "Start";
+        } 
+        else {
+          scope.start();
+        }
+      }
     }
-  }
-  $scope.updateTimer = function() { 
-    if ($scope.buttonLabel === "Reset") {
-      $scope.stop();
-      $scope.setTimer();
-      $scope.buttonLabel = "Start";
-    } 
-    else {
-      $scope.start();
-    }
-  }
+  };
 }]);
 
 blocTime.filter('remainingTime', function() {
