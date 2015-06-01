@@ -12,10 +12,6 @@ blocTime.config(['$stateProvider', '$locationProvider', function($stateProvider,
 blocTime.controller('HomeController', ['$scope', '$interval', '$filter', function($scope, $interval, $filter) {
   completedWorkSessions = 0;
   onBreak = false;
-
-  dingSound = new buzz.sound( "/media/ding.mp3", {
-    preload: true
-  });
 }]);
 
 blocTime.directive('timer', ['$interval','$filter', function($interval, $filter){
@@ -27,6 +23,9 @@ blocTime.directive('timer', ['$interval','$filter', function($interval, $filter)
     link: function(scope, element, attributes) {
       var $timer = element;
       var promise;
+      var dingSound = new buzz.sound( "/media/ding.mp3", {
+        preload: true
+      }); 
       scope.buttonLabel = "Start";
       scope.setTimer = function() {
         if (onBreak) {
@@ -49,8 +48,20 @@ blocTime.directive('timer', ['$interval','$filter', function($interval, $filter)
       }
       scope.countDown = function() {
         scope.time -= 1;
-        scope.buttonLabel = "Reset";
-        if (scope.time === 0) {
+      }
+      scope.updateTimer = function() { 
+        if (scope.buttonLabel === "Reset") {
+          scope.stop();
+          scope.setTimer();
+          scope.buttonLabel = "Start";
+        } 
+        else {
+          scope.start();
+          scope.buttonLabel = "Reset";
+        }
+      }
+      scope.$watch('time', function(newVal, oldVal) {
+        if (newVal === 0) {
           dingSound.play();
           scope.stop();
           if (!onBreak) {
@@ -58,18 +69,7 @@ blocTime.directive('timer', ['$interval','$filter', function($interval, $filter)
           }
           onBreak = !onBreak;
         }
-      }
-      scope.updateTimer = function() { 
-        if (scope.buttonLabel === "Reset") {
-          dingSound.stop();
-          scope.stop();
-          scope.setTimer();
-          scope.buttonLabel = "Start";
-        } 
-        else {
-          scope.start();
-        }
-      }
+      });
     }
   };
 }]);
