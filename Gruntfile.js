@@ -58,6 +58,7 @@ module.exports = function(grunt) {
                     './app/sass/**/*.scss',
                     './app/pages/**/*.html',
                     './app/templates/**/*.html',
+                    './app/media/**/*',
                     'Gruntfile.js'
                 ],
                 tasks: [
@@ -76,6 +77,11 @@ module.exports = function(grunt) {
         copy: {
             dist: {
                 files: [{
+                    expand: true,
+                    src: [ './*' ],
+                    dest: './dist/media',
+                    cwd: './app/media/'
+                },{
                     expand: true,
                     src: [ './**/*.png', './**/*.jpg' ],
                     dest: './dist/images',

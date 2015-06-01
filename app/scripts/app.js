@@ -13,13 +13,9 @@ blocTime.controller('HomeController', ['$scope', '$interval', '$filter', functio
   completedWorkSessions = 0;
   onBreak = false;
 
-  dingSound = new buzz.sound('http://www.tonycuffe.com/mp3/tail%20toddle.mp3', {
+  dingSound = new buzz.sound( "/media/ding.mp3", {
     preload: true
   });
-  // I can't seem to get a local file to play. used the above file just to test buzz library
-  // dingSound = new buzz.sound( "/media/ding.mp3", {
-  //   preload: true
-  // });
 }]);
 
 blocTime.directive('timer', ['$interval','$filter', function($interval, $filter){
