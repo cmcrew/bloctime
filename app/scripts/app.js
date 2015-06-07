@@ -90,4 +90,13 @@ blocTime.filter('remainingTime', function() {
     output += remainingSeconds;
     return output;
   }
-})
+});
+
+blocTime.factory('Tasks', ['$firebase', function($firebase) {
+  var ref = new Firebase("https://glaring-heat-213.firebaseio.com/");
+  var sync = $firebase(ref);
+  tasks = sync.$asArray();
+  return {
+    all: tasks
+  }
+}]);

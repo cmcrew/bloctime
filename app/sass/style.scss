@@ -1,9 +1,17 @@
 .container-fluid {
   height: 100vh;
-  .app-content {
-    text-align: center;
+  .row > div { height: 100vh; }
+  .timer-section {
     position: relative;
+    text-align: center;
     top: 50%;
     transform: translateY(-50%);
+  }
+  .tasks {
+    background: #eee;
+    border-right: 1px solid #999;
+    button {
+      margin-top: 20px;
+    }
   }
 }
