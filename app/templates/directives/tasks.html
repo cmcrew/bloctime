@@ -1,0 +1,15 @@
+<div class="task-container">
+  <h2>Task history</h2>
+  <form class="clearfix">
+    <div class="form-group">
+      <label for="task-item">Enter Task</label>
+      <input type="text" id="task-item" class="form-control" />
+      <button type="submit" class="btn pull-right btn-default">{{buttonLabel}}</button>
+    </div>
+  </form>
+  <div class="completed-tasks">
+    <ul>
+      <li ng-repeat="task in tasks">{{ task.$value }}</li>
+    </ul>
+  </div>
+</div>

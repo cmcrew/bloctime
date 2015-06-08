@@ -1,4 +1,4 @@
-var blocTime = angular.module('bloctime', ['ui.router']);
+var blocTime = angular.module('bloctime', ['ui.router', 'firebase']);
 
 blocTime.config(['$stateProvider', '$locationProvider', function($stateProvider, $locationProvider) {
   $locationProvider.html5Mode(true);
@@ -9,12 +9,36 @@ blocTime.config(['$stateProvider', '$locationProvider', function($stateProvider,
   });
 }]);
 
+blocTime.factory('TaskFactory', ['$firebase', function($firebase) {
+  var ref = new Firebase("https://glaring-heat-213.firebaseio.com/");
+  var sync = $firebase(ref);
+  tasks = sync.$asArray();
+  return {
+    all: tasks
+  };
+}]);
+
 blocTime.controller('HomeController', ['$scope', '$interval', '$filter', function($scope, $interval, $filter) {
   completedWorkSessions = 0;
   onBreak = false;
 }]);
 
-blocTime.directive('timer', ['$interval','$filter', function($interval, $filter){
+blocTime.directive('tasklist', ['TaskFactory', function(TaskFactory) {
+  return {
+    templateUrl: '/templates/directives/tasks.html',
+    replace: true,
+    restrict: 'E',
+    scope: {},
+    link: function(scope, element, attributes) {
+      scope.tasks = TaskFactory.all;
+      console.log('tasks: ');
+      console.log(scope.tasks);
+      scope.buttonLabel = "Add task";
+    }
+  };
+}]);
+
+blocTime.directive('timer', ['$interval','$filter', function($interval, $filter) {
   return {
     templateUrl: '/templates/directives/timer.html',
     replace: true,
@@ -91,12 +115,3 @@ blocTime.filter('remainingTime', function() {
     return output;
   }
 });
-
-blocTime.factory('Tasks', ['$firebase', function($firebase) {
-  var ref = new Firebase("https://glaring-heat-213.firebaseio.com/");
-  var sync = $firebase(ref);
-  tasks = sync.$asArray();
-  return {
-    all: tasks
-  }
-}]);
