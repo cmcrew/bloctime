@@ -31,6 +31,11 @@ blocTime.directive('tasklist', ['TaskFactory', function(TaskFactory) {
     scope: {},
     link: function(scope, element, attributes) {
       scope.tasks = TaskFactory.all;
+      scope.addTask = function() {
+        scope.tasks.$add({
+          $value: scope.newTask
+        });
+      };
       console.log('tasks: ');
       console.log(scope.tasks);
       scope.buttonLabel = "Add task";
