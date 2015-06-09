@@ -21,3 +21,25 @@ describe('remainingTimeFilter', function() {
       expect(remainingTimeFilter(20)).to.equal("0:20");
   }));
 })
+
+
+describe('tasklistDirective', function() {
+  beforeEach(module('bloctime'));
+  var element;
+  var scope;
+  var $compile;
+
+  beforeEach(inject(function ($rootScope, _$compile_) {
+
+    scope = $rootScope;
+    $compile = _$compile_;
+
+    element = angular.element('<tasklist></tasklist>');
+
+  }));
+  it('should add task to the list', function() {
+    debugger;
+    scope.addTask();
+    expect(scope.tasks)
+  });
+})
