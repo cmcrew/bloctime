@@ -9,7 +9,7 @@
   </form>
   <div class="completed-tasks">
     <ul>
-      <li ng-repeat="task in tasks">{{ task.$value }}</li>
+      <li ng-repeat="task in tasks | orderBy:'created_at':true">{{ task.$value }}</li>
     </ul>
   </div>
 </div>
