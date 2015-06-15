@@ -54,6 +54,7 @@ blocTime.directive('timer', ['$interval','$filter', function($interval, $filter)
       var dingSound = new buzz.sound( "/media/ding.mp3", {
         preload: true
       }); 
+      scope.isPaused = false;
       scope.buttonLabel = "Start";
       scope.setTimer = function() {
         if (onBreak) {
@@ -67,12 +68,25 @@ blocTime.directive('timer', ['$interval','$filter', function($interval, $filter)
         }
       }
       scope.setTimer();
+      scope.pauseButtonShown = function(){
+         return scope.buttonLabel !== "Start" && !scope.isPaused;
+      }
       scope.start = function() {
+        scope.showPauseButton = true;
         scope.stop();
         promise = $interval(scope.countDown, 1000);
       }
       scope.stop = function() {
+        scope.showPauseButton = false;
         $interval.cancel(promise);
+      }
+      scope.pauseTimer = function() {
+        scope.isPaused = true;
+        scope.stop();
+      }
+      scope.resumeTimer = function() {
+        scope.isPaused = false;
+        scope.start();
       }
       scope.countDown = function() {
         scope.time -= 1;
@@ -87,6 +101,7 @@ blocTime.directive('timer', ['$interval','$filter', function($interval, $filter)
           scope.start();
           scope.buttonLabel = "Reset";
         }
+        scope.isPaused = false;
       }
       scope.$watch('time', function(newVal, oldVal) {
         if (newVal === 0) {

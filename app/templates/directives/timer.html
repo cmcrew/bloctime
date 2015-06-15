@@ -1,4 +1,6 @@
 <div class="timer-container">
   <h2>{{time | remainingTime}}</h2>
   <button ng-click="updateTimer()" class="btn btn-default">{{buttonLabel}}</button>
+  <button ng-click="pauseTimer()" ng-show="pauseButtonShown()" class="btn btn-default pause">Pause</button>
+  <button ng-click="resumeTimer()" ng-show="isPaused" class="btn btn-default resume">Resume</button>
 </div>
