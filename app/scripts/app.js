@@ -33,10 +33,8 @@ blocTime.directive('tasklist', ['TaskFactory', function(TaskFactory) {
       scope.tasks = TaskFactory.all;
       scope.addTask = function() {
         if (scope.newTask === "") return;
-
-        scope.tasks.$add({
-          $value: scope.newTask
-        });
+        var task = {task: scope.newTask, created_at: Firebase.ServerValue.TIMESTAMP}
+        scope.tasks.$add(task);
         scope.newTask = "";
       };
       scope.buttonLabel = "Add task";
