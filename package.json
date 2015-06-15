@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "hapi": "^7.5.0",
+    "karma-ng-html2js-preprocessor": "^0.1.2",
     "path": "^0.4.9"
   },
   "devDependencies": {

@@ -27,8 +27,10 @@ module.exports = function(grunt) {
                       "https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.13/angular-ui-router.min.js",
                       'node_modules/angular-mocks/angular-mocks.js',
                       'app/scripts/**/*.js',
-                      'test/**/*.js'
-                      ]
+                      'test/**/*.js',
+                      'app/templates/directives/*.html'
+                      ],
+              preprocessors: {'app/templates/directives/*.html': 'html2js'}
             }
           }
         },

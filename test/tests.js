@@ -25,21 +25,28 @@ describe('remainingTimeFilter', function() {
 
 describe('tasklistDirective', function() {
   beforeEach(module('bloctime'));
+  beforeEach(module('app/templates/directives/tasks.html'));
   var element;
   var scope;
   var $compile;
 
-  beforeEach(inject(function ($rootScope, _$compile_) {
+  beforeEach(inject(function ($templateCache, $rootScope, _$compile_) {
+
+    template = $templateCache.get('app/templates/directives/tasks.html');
+		$templateCache.put('/templates/directives/tasks.html', template);
 
     scope = $rootScope;
     $compile = _$compile_;
 
-    element = angular.element('<tasklist></tasklist>');
+    element = $compile(angular.element('<tasklist></tasklist>'))(scope);
+    scope.$apply();
+    isolateScope = element.isolateScope();
 
   }));
   it('should add task to the list', function() {
-    debugger;
-    scope.addTask();
-    expect(scope.tasks)
+    isolateScope.tasks = [];
+    isolateScope.tasks.$add = function(task){ isolateScope.tasks.push(task);};
+    isolateScope.addTask();
+    expect(isolateScope.tasks.length).to.equal(1);
   });
 })
